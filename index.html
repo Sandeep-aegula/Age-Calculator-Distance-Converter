@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Age Calculator & Distance Converter</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #ffffff;
+        }
+
+        h1 {
+            background: linear-gradient(100deg, rgb(255, 0, 0), rgb(246, 131, 0), rgb(255, 255, 0), rgb(25, 251, 0), rgb(0, 195, 255), rgb(149, 0, 255), rgb(255, 0, 255));
+            background-repeat: no-repeat;
+            color: transparent;
+            content: attr(data-text);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-family: 'Arial', sans-serif;
+            font-size: 2.5rem;
+            text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.5);
+        }
+
+        .converter-section {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.21);
+            backdrop-filter: blur(0.2px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .converter-section>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        #app {
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        #app canvas {
+            display: block;
+            position: fixed;
+            z-index: -1;
+            top: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header- {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+
+        .header {
+            padding: 20px 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="header bg-primary py-4 px-4 text-center">
+            <h1 class="header-title">Age & Distance Calculator</h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 p-4">
+                    <div class="converter-section">
+                        <h2>Age Calculator</h2>
+                        <div class="form-group">
+                            <label for="dob">Date Of Birth:</label>
+                            <input type="date" id="dob" class="form-control" required>
+                        </div>
+                        <button class="btn btn-primary mt-3" onclick="calculateAge()">Calculate Age</button>
+                        <div class="result">
+                            <p>Age in Years: <span id="years"></span></p>
+                            <p>Age in Months: <span id="months"></span></p>
+                            <p>Age in Hours: <span id="hours"></span></p>
+                            <p>Age in Minutes: <span id="minutes"></span></p>
+                            <p>Age in Seconds: <span id="seconds"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 p-4">
+                    <div class="converter-section">
+                        <h2>Distance Converter</h2>
+                        <div class="form-group">
+                            <label for="distance">Distance:</label>
+                            <input type="text" id="distance" class="form-control" required>
+                        </div>
+                        <label for="unit">Units:</label>
+                        <select id="unit" class="form-control">
+                            <option value=" kilometers"> Kilometers</option>
+                            <option value="meters">Meters</option>
+                            <option value="inches">Inches</option>
+                        </select>
+                        <button class="btn btn-primary mt-3" onclick="convertDistance()">Convert</button>
+                        <div class="result">
+                            <p>Distance in Kilometers: <span id="km"></span></p>
+                            <p>Distance in Meters: <span id="m"></span></p>
+                            <p>Distance in Inches: <span id="in"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        function calculateAge() {
+            var dob = document.getElementById('dob').value;
+            var today = new Date();
+            var birthDate = new Date(dob);
+            var ageInYears = today.getFullYear() - birthDate.getFullYear();
+            var monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                ageInYears--;
+            }
+            var ageInMonths = (ageInYears * 12) + monthDiff;
+            var ageInHours = ageInYears * 365.25 * 24;
+            var ageInMinutes = ageInYears * 365.25 * 24 * 60;
+            var ageInSeconds = ageInYears * 365.25 * 24 * 60 * 60;
+            document.getElementById('years').textContent = ageInYears;
+            document.getElementById('months').textContent = ageInMonths;
+            document.getElementById('hours').textContent = ageInHours;
+            document.getElementById('minutes').textContent = ageInMinutes;
+            document.getElementById('seconds').textContent = ageInSeconds;
+        }
+
+        function convertDistance() {
+            var distance = parseFloat(document.getElementById('distance').value);
+            var unit = document.getElementById('unit').value;
+            if (unit === 'kilometers') {
+                document.getElementById('km').textContent = distance;
+                document.getElementById('m').textContent = distance * 1000;
+                document.getElementById('in').textContent = distance * 39370.1;
+            } else if (unit === 'meters') {
+                document.getElementById('km').textContent = distance / 1000;
+                document.getElementById('m').textContent = distance;
+                document.getElementById('in').textContent = distance * 39.3701;
+            } else if (unit === 'inches') {
+                document.getElementById('km').textContent = distance / 39370.1;
+                document.getElementById('m').textContent = distance / 39.3701;
+                document.getElementById('in').textContent = distance;
+            } else {
+                alert("Please enter a valid unit: kilometers, meters, or inches.");
+            }
+        }
+    </script>
+    <script type="module">
+        import { particlesCursor } from 'https://unpkg.com/threejs-toys@0.0.8/build/threejs-toys.module.cdn.min.js';
+
+        const pc = particlesCursor({
+            el: document.getElementById('app'),
+            gpgpuSize: 512,
+            colors: [
+                0xff0000,
+                0xff7f00,
+                0xffff00,
+                0x00ff00,
+                0x0000ff,
+                0x4b0082,
+                0x9400d3
+            ],
+            color: 0x0000ff,
+            coordScale: 0.10,
+            noiseIntensity: 0.005,
+            noiseTimeCoef: 0.0001,
+            pointSize: 0.9,
+            pointDecay: 0.0025,
+            sleepRadiusX: 250,
+            sleepRadiusY: 250,
+            sleepTimeCoefX: 0.001,
+            sleepTimeCoefY: 0.002
+        });
+        const cursor = document.querySelector(".cursor");
+        var timeout;
+    </script>
+</body>
+</html>
